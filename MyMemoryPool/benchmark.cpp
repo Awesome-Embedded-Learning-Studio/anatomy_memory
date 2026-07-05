@@ -22,13 +22,13 @@ struct TestObj {
 namespace {
 void print_header(const char *s) { std::print("\n=== {} ===\n", s); }
 
-template <typename CreateFn, typename DestoryFn>
-void benchmark_st(const char *name, CreateFn create, DestoryFn destory) {
+template <typename CreateFn, typename DestroyFn>
+void benchmark_st(const char *name, CreateFn create, DestroyFn destroy) {
   auto start = std::chrono::high_resolution_clock::now();
   for (size_t i = 0; i < kOps; i++) {
     void *p = create();
     global_sink = p;
-    destory(p);
+    destroy(p);
   }
   auto end = std::chrono::high_resolution_clock::now();
 
@@ -36,14 +36,14 @@ void benchmark_st(const char *name, CreateFn create, DestoryFn destory) {
   std::println("{}: {}s", name, duration);
 }
 
-template <typename CreateFn, typename DestoryFn>
-void benchmark_mt(const char *name, CreateFn create, DestoryFn destory) {
+template <typename CreateFn, typename DestroyFn>
+void benchmark_mt(const char *name, CreateFn create, DestroyFn destroy) {
 
   auto worker = [&]() {
     for (size_t i = 0; i < kOps; i++) {
       void *p = create();
       global_sink = p;
-      destory(p);
+      destroy(p);
     }
   };
 
@@ -126,7 +126,7 @@ int main() {
       []() -> void * { return MemoryPool::make<TestObj>(1, 2.0); },
       [](void *p) {
         TestObj *obj = reinterpret_cast<TestObj *>(p);
-        MemoryPool::destory(obj);
+        MemoryPool::destroy(obj);
       });
 
   print_header("Test SmallObj MultiThread");
@@ -143,7 +143,7 @@ int main() {
       []() -> void * { return MemoryPool::make<TestObj>(1, 2.0); },
       [](void *p) {
         TestObj *obj = reinterpret_cast<TestObj *>(p);
-        MemoryPool::destory(obj);
+        MemoryPool::destroy(obj);
       });
 
   bench_vector_small("vector test 1", 1);
