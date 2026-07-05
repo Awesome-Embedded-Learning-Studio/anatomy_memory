@@ -1,4 +1,4 @@
-# Project_MakeAMemroyPool
+# anatomy_memory
 
 > **从 malloc 到内存池：手写一个高性能分配器**
 
@@ -59,7 +59,7 @@
 ## 🗂️ 项目结构
 
 ```
-Project_MakeAMemroyPool/
+anatomy_memory/
 ├── MyMemoryPool/              # 内存池实现
 │   ├── memory_pool.hpp        # 核心实现（单头文件）
 │   ├── memory_pool_config.h   # 配置参数
